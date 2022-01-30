@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
     private val feeds = listOf(
         "https://www.npr.org/rss/rss.php?id=1001",
         "http://rss.cnn.com/rss/cnn_topstories.rss",
-        "http://feeds.foxnews.com/foxnews/politics?format=xml"
+        "http://feeds.foxnews.com/foxnews/politics?format=xml",
+        "htt://myNewsFeed"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,15 +39,20 @@ class MainActivity : AppCompatActivity() {
         }
 
         requests.forEach {
-            it.await()
+            it.join()
         }
 
-        val headlines = requests.flatMap {
-            it.getCompleted()
-        }
+        val headlines = requests
+            .filter { !it.isCancelled }
+            .flatMap { it.getCompleted() }
+
+        val failed = requests
+            .filter { it.isCancelled }
+            .size
 
         GlobalScope.launch(Dispatchers.Main) {
-            binding.tv.text = "Foundd ${headlines.size} news in ${requests.size} feeds"
+            binding.tv.text = "Found ${headlines.size} news in ${requests.size} feeds"
+            binding.warning.text = if(failed > 0) "Failed to fetch $failed feeds" else " "
         }
     }
 
