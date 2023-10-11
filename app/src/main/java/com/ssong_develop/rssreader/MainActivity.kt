@@ -1,8 +1,10 @@
 package com.ssong_develop.rssreader
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ssong_develop.rssreader.databinding.ActivityMainBinding
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -11,6 +13,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.Node
 import javax.xml.parsers.DocumentBuilderFactory
 
+@DelicateCoroutinesApi
 class MainActivity : AppCompatActivity() {
 
     private val binding : ActivityMainBinding by lazy {
@@ -28,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun loadNews() {
         val headLines = fetchRssHeadlines()
         GlobalScope.launch(Dispatchers.Main.immediate) {
