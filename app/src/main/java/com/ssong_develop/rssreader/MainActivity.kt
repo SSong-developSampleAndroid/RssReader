@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ssong_develop.rssreader.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        GlobalScope.launch(dispatcher) {
+        CoroutineScope(dispatcher).launch {
             loadNews()
         }
     }
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun loadNews() {
         val headLines = fetchRssHeadlines()
-        GlobalScope.launch(Dispatchers.Main.immediate) {
+        CoroutineScope(Dispatchers.Main.immediate).launch {
             binding.tv.text = "Found ${headLines.size} News"
         }
     }
